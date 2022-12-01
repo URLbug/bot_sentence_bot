@@ -40,18 +40,33 @@ async def start(m: types.Message):
 
 @dp.message_handler(text='Предложение',state=None)
 async def pred(m: types.Message):
-  await m.reply('Напишите Ваше предложение')
+  await m.reply('Напишите Ваше предложение или отправьте Ваше фото, видео')
   await Sessions.why.set()
 
-@dp.message_handler(state=Sessions.why)
+@dp.message_handler(state=Sessions.why,content_types=['photo','text','vidio'])
 async def pred_2(m: types.Message,state: FSMContext):
-  sessions_bot['why'] = m.text
   user['goal'] = [i.count_offers for i in db.session.query(db.User).filter(db.User.id_user == user['username'])][0]
   user['goal'] += 1
   db.User.update_count_offers(user['username'],user['goal'])
-  await m.reply('Ваше предложение отправлено')
-  await bot.send_message(-819572767,
-                         f'Новое предложение от пользователя {m.from_user.username}:\n{sessions_bot["why"]}')
+
+  if m.text:
+    sessions_bot['why'] = m.text
+    await m.reply('Ваше предложение отправлено')
+    await bot.send_message(-819572767,
+                           f'Новое предложение от пользователя {m.from_user.username}:\n{sessions_bot["why"]}')
+  else:
+    try:
+      sessions_bot['why'] = m.photo[0].file_id
+      await m.reply('Ваше предложение отправлено')
+      await bot.send_photo(-819572767,
+                           photo=sessions_bot["why"],
+                           caption=f'Новое предложение от пользователя {m.from_user.username}')
+    except:
+      sessions_bot['why'] = m.video.file_id
+      await m.reply('Ваше предложение отправлено')
+      await bot.send_video(-819572767,
+                          video=sessions_bot["why"],
+                          caption=f'Новое предложение от пользователя {m.from_user.username}')
   await state.finish()
 
 @dp.message_handler(commands=['admin'])
