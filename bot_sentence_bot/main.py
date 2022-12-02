@@ -9,7 +9,7 @@ import database as db
 from classs import Sessions
 
 
-bot = Bot('5889581464:AAFBzA97vPaDKVA0z42uKdd86z_lYI6wh7k')
+bot = Bot('TOKEN')
 
 dp = Dispatcher(bot,storage=MemoryStorage())
 
