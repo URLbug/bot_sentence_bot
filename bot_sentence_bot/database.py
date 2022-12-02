@@ -6,7 +6,7 @@ from sqlalchemy import MetaData
 
 DATABASE_NAME = 'Bot'
 
-engine = create_engine('mysql+pymysql://ud5tfm6uhi7i91af:jyD8JRLSKXONRRP6ov8i@bvtifgpwiuotq7wuqsn2-mysql.services.clever-cloud.com:3306/bvtifgpwiuotq7wuqsn2')
+engine = create_engine('mysql+pymysql://user:pass@HOST:3306/DB')
 
 Base = declarative_base()
 metadata_obj = MetaData()
